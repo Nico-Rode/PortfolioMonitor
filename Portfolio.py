@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import matplotlib.ticker as mticker
 import matplotlib.dates as mdates
 import numpy as np
+import time
 import datetime
 
 class Portfolio:
@@ -43,6 +44,7 @@ class Portfolio:
     def getCurrentData(self):
         self.portfolioValue = 0
         for stock in self.listOfStocks:
+            time.sleep(.5)
             self.listOfStocks[stock].setEquityValue(gf.getQuotes(stock)[0]['LastTradePrice'])
             self.portfolioValue += (float((gf.getQuotes(stock)[0]['LastTradePrice'])) * self.listOfStocks[stock].getShares())
         self.refreshWeights()
@@ -57,11 +59,17 @@ class Portfolio:
         print "This represents return of ", self.portfolioPerformance, "%"
         print "Your returns for each stock: "
         for stock in self.listOfStocks:
+            time.sleep(.5)
             print ""
-            print "stock : ", stock, " is trading at", float((gf.getQuotes(stock)[0]['LastTradePrice'])), "You bought ", self.listOfStocks[stock].getShares(), \
+            print "stock : ", stock, " is trading at", float((gf.getQuotes(stock)[0]['LastTradePrice']))
+            time.sleep(.5)
+            print "You bought ", self.listOfStocks[stock].getShares(), \
                 " shares; with total equity price being: ", self.listOfStocks[stock].getEquityValue()
-            print stock, " represents ", self.listOfStocks[stock].getPercentageOfPortfolio(), "% of your portfolio"
-        self.plotData()
+            time.sleep(.5)
+
+            print stock, " represents ", self.listOfStocks[stock].getPercentageOfPortfolio(), "% of your portfolio and has resulted in a ", self.listOfStocks[stock].getReturns(), "% return"
+            print "----------------------------------------------------------------------------------"
+       # self.plotData()
 
 
 

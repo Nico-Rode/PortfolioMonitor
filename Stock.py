@@ -50,3 +50,6 @@ class Stock:
     def addToSharesBought(self, sharesBought):
         self.sharesBought += sharesBought
 
+    def getReturns(self):
+        return (1 - (self.getTotalSpent()/self.getEquityValue()))*100
+

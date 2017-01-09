@@ -1,6 +1,7 @@
 import time
 import datetime
 import os
+import googlefinance as gf
 import Portfolio
 import Stock as s
 
@@ -27,7 +28,7 @@ initialize(test2, [salesforce,etrade,amd])
 while True:
     os.system('cls' if os.name == 'nt' else 'clear')
     main()
-    time.sleep(60)
+    time.sleep(300)
 
 
 
