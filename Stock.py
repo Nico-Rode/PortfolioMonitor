@@ -5,6 +5,7 @@ class Stock:
     valuePerShareAtPurchase = 0
     percentageOfPortfolio = 0
     equityValue = 0
+    totalSpent = 0
     ticker = ''
 
     def __init__(self,sharesBought, valuePerShare, ticker, Portfolio):
@@ -12,9 +13,8 @@ class Stock:
         self.valuePerShareAtPurchase = valuePerShare
         self.ticker = ticker
         self.equityValue = (valuePerShare * sharesBought)
-        Portfolio.addStockToPortfolio(self)
-        Portfolio.addToPortfolioValue(self.equityValue)
-        Portfolio.setTotalAmountInvested(self.equityValue)
+        self.totalSpent = (valuePerShare * sharesBought)
+
 
 
 
@@ -31,4 +31,22 @@ class Stock:
     def calculatePercentageOfPorfolio(self, Portfolio):
         self.percentageOfPortfolio = (self.equityValue/Portfolio.getValueOfPortfolio())*100
         return self.percentageOfPortfolio
+
+    def getTotalSpent(self):
+        return self.totalSpent
+
+    def getEquityValue(self):
+        return self.equityValue
+
+    def setEquityValue(self, stockPrice):
+        self.equityValue = (float(stockPrice) * float(self.sharesBought))
+
+    def getShares(self):
+        return self.sharesBought
+
+    def setShares(self, sharesBought):
+        self.sharesBought = sharesBought
+
+    def addToSharesBought(self, sharesBought):
+        self.sharesBought += sharesBought
 

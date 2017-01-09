@@ -1,25 +1,74 @@
+import googlefinance as gf
+import matplotlib.pyplot as plt
+import matplotlib.ticker as mticker
+import matplotlib.dates as mdates
+import numpy as np
+import datetime
+
 class Portfolio:
     totalAmountInvested = 0
     portfolioValue = 0
     sharesOutstanding = 0
+    portfolioPerformance = 0
     listOfStocks = {}
 
-    def Portfolio(self):
-        return 'hello world'
+    def __init__(self):
+        print "Created Portfolio"
 
     def getTotalAmountInvested(self):
         return self.totalAmountInvested;
 
-    def setTotalAmountInvested(self, amount):
-        self.totalAmountInvested = amount
+    def addToTotalAmountInvested(self, amount):
+        self.totalAmountInvested += amount
 
     def addStockToPortfolio(self, Stock):
-        print("Got here")
-        #self.listOfStocks.update(Stock, Stock.calculatePercentageOfPorfolio(self))
+        self.addToTotalAmountInvested(Stock.getTotalSpent())
+        self.addToPortfolioValue(Stock.getEquityValue())
+        self.listOfStocks.update({Stock.ticker : Stock})
 
     def getValueOfPortfolio(self):
-        print self.portfolioValue
         return self.portfolioValue
 
     def addToPortfolioValue(self, value):
         self.portfolioValue += value
+
+    def getListOfStocks(self):
+        return self.listOfStocks
+
+    def refreshWeights(self):
+        for stock in self.listOfStocks:
+            self.listOfStocks[stock].calculatePercentageOfPorfolio(self)
+
+
+    def getCurrentData(self):
+        self.portfolioValue = 0
+        for stock in self.listOfStocks:
+            self.listOfStocks[stock].setEquityValue(gf.getQuotes(stock)[0]['LastTradePrice'])
+            self.portfolioValue += (float((gf.getQuotes(stock)[0]['LastTradePrice'])) * self.listOfStocks[stock].getShares())
+        self.refreshWeights()
+        self.portfolioPerformance = (1 - (self.totalAmountInvested / self.portfolioValue)) * 100
+            # print "Equity Value : ", self.listOfStocks[stock].getEquityValue()
+            # print "Total Spent : ", self.listOfStocks[stock].getTotalSpent()
+
+    def showReturns(self):
+        self.getCurrentData()
+        print ("")
+        print "Total Value of Portfolio : ", self.portfolioValue
+        print "This represents return of ", self.portfolioPerformance, "%"
+        print "Your returns for each stock: "
+        for stock in self.listOfStocks:
+            print ""
+            print "stock : ", stock, " is trading at", float((gf.getQuotes(stock)[0]['LastTradePrice'])), "You bought ", self.listOfStocks[stock].getShares(), \
+                " shares; with total equity price being: ", self.listOfStocks[stock].getEquityValue()
+            print stock, " represents ", self.listOfStocks[stock].getPercentageOfPortfolio(), "% of your portfolio"
+        self.plotData()
+
+
+
+    def plotData(self):
+        fig = plt.figure()
+        ax1 = plt.subplot(1,1,1)
+        ax1.plot(datetime.datetime.now().hour, self.portfolioPerformance)
+        plt.show()
+
+
